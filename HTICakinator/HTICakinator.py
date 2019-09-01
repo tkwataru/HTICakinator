@@ -89,7 +89,7 @@ class ETICakinator:
 
     def showQ(self, q):
         print(" current p :  "+str(self.p))
-        print (str(len(self.q_list)+1) + ":" + q + "? (Y / y / Yes / yes)")
+        print (str(len(self.q_list)+1) + ":" + q + " (Y / y / Yes / yes)")
 
     def isNeedContinueQ(self):
         if(self.isLastQuestion()):
