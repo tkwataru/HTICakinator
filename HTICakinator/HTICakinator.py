@@ -4,9 +4,12 @@ import math
 import json
 import collections as cl
 import argparse
+import numpy as np
+import heapq
 
 THRESHOLD_ANS = 0.95 # 確率しきい値
 MAX_QUESTIONS = 20 # 最大質問数
+NUM_CHOICE = 3 # ランダム上位質問候補数
 
 class ETICakinator:
     def __init__(self, database_path):
@@ -95,21 +98,31 @@ class ETICakinator:
     
     def decideQ(self):
     #search best question
-        max_e = float("-inf")
-        max_e_q = ""
+        #max_e = float("-inf")
+        #max_e_q = ""
+        e_q_list = []
 
         cur_entropy = self.calculateE(self.p)
 
         for q_candidate in self.q_candidates:
+            # 既出質問は飛ばす
             if q_candidate in self.q_list:
                 continue
 
             e = self.calculateGainE(cur_entropy, q_candidate)
-            if max_e < e:
-                max_e = e
-                max_e_q = q_candidate
+            e_q_list.append((e, q_candidate))
+			
+            # 最大エントロピーの質問を選択
+            #if max_e < e:
+            #    max_e = e
+            #    max_e_q = q_candidate
 
-        return max_e_q
+        max_nth_e_q = np.array(heapq.nlargest(NUM_CHOICE, e_q_list))	# エントロピー上位n個の質問抽出
+        print(max_nth_e_q)
+        nth_p = max_nth_e_q[:,0].astype(np.float32) / np.sum(max_nth_e_q[:,0].astype(np.float32))
+        return np.random.choice(max_nth_e_q[:,1], p = nth_p)	# エントロピーを選択確率として質問をランダム選択
+
+        # return max_e_q
 
     def updateP(self, p, q, a):
         new_p = {}
