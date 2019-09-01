@@ -154,7 +154,7 @@ class ETICakinator:
 
     def showAndAskAnswer(self):
         (disease, est) = self.getBestEstimate()
-        print( disease + " : " + str(est) + "? (Y / y / Yes / yes)")
+        print( disease + " : " + str(est) + " (Y / y / Yes / yes)")
 
         last_ans = self.answer()
         return last_ans
