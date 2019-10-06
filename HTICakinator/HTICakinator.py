@@ -11,7 +11,7 @@ THRESHOLD_ANS = 0.95 # 確率しきい値
 MAX_QUESTIONS = 20 # 最大質問数
 NUM_CHOICE = 3 # ランダム上位質問候補数
 
-class ETICakinator:
+class HTICakinator:
     def __init__(self, database_path):
         self.database = cl.OrderedDict()    # 辞書型の順序固定
 
@@ -111,14 +111,14 @@ class ETICakinator:
 
             e = self.calculateGainE(cur_entropy, q_candidate)
             e_q_list.append((e, q_candidate))
-			
+
             # 最大エントロピーの質問を選択
             #if max_e < e:
             #    max_e = e
             #    max_e_q = q_candidate
 
         max_nth_e_q = np.array(heapq.nlargest(NUM_CHOICE, e_q_list))	# エントロピー上位n個の質問抽出
-        print(max_nth_e_q)
+        #print(max_nth_e_q)
         nth_p = max_nth_e_q[:,0].astype(np.float32) / np.sum(max_nth_e_q[:,0].astype(np.float32))
         return np.random.choice(max_nth_e_q[:,1], p = nth_p)	# エントロピーを選択確率として質問をランダム選択
 
@@ -188,6 +188,6 @@ if __name__ == "__main__":
     parser.add_argument('database_path', help='Path to database.json')
     args = parser.parse_args()
    
-    eticakinator = ETICakinator(args.database_path)
-    eticakinator.main()
+    hticakinator = HTICakinator(args.database_path)
+    hticakinator.main()
     

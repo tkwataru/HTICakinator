@@ -12,7 +12,7 @@
     <Name>HTICakinator</Name>
     <RootNamespace>HTICakinator</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>database_dummy.json</CommandLineArguments>
+    <CommandLineArguments>database_dummy0917.json</CommandLineArguments>
     <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -24,6 +24,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="dummyUI.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="HTICakinator.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
