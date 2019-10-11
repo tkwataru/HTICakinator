@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 # #!/usr/bin/env python3
-import math
-import json
-import collections as cl
 import argparse
-import numpy as np
-import heapq
-import HTICakinator
 import socket
 
 
