@@ -6,10 +6,11 @@ import collections as cl
 import argparse
 import numpy as np
 import heapq
+import socket
 
 THRESHOLD_ANS = 0.95 # 確率しきい値
-MAX_QUESTIONS = 20 # 最大質問数
-NUM_CHOICE = 3 # ランダム上位質問候補数
+MAX_QUESTIONS = 10 # 最大質問数
+NUM_CHOICE = 1 # ランダム上位質問候補数
 
 class HTICakinator:
     def __init__(self, database_path):
@@ -90,6 +91,8 @@ class HTICakinator:
     def showQ(self, q):
         print(" current p :  "+str(self.p))
         print (str(len(self.q_list)+1) + ":" + q + " (Y / y / Yes / yes)")
+        # クライアントに質問送信
+        self.conn.sendall((str(len(self.q_list)+1) + ":" + q + " (Y / y / Yes / yes)").encode('utf-8'))
 
     def isNeedContinueQ(self):
         if(self.isLastQuestion()):
@@ -118,7 +121,7 @@ class HTICakinator:
             #    max_e_q = q_candidate
 
         max_nth_e_q = np.array(heapq.nlargest(NUM_CHOICE, e_q_list))	# エントロピー上位n個の質問抽出
-        #print(max_nth_e_q)
+        print(max_nth_e_q)
         nth_p = max_nth_e_q[:,0].astype(np.float32) / np.sum(max_nth_e_q[:,0].astype(np.float32))
         return np.random.choice(max_nth_e_q[:,1], p = nth_p)	# エントロピーを選択確率として質問をランダム選択
 
@@ -155,18 +158,35 @@ class HTICakinator:
     def showAndAskAnswer(self):
         (disease, est) = self.getBestEstimate()
         print( disease + " : " + str(est) + " (Y / y / Yes / yes)")
+        # クライアントに質問送信
+        self.conn.sendall((disease + " : " + str(est) + " (Y / y / Yes / yes)").encode('utf-8'))
 
         last_ans = self.answer()
         return last_ans
 
     def answer(self):
-        input_text = input()
+        # input_text = input()
+        # クライアントから回答受信待ち
+        input_text = self.conn.recv(1024).decode('utf-8')
         if input_text == "Y" or input_text == "y" or input_text == "Yes" or  input_text == "yes":
             return 0
         else:
             return 1
 
+    def socketConnect(self):
+        # AF = IPv4 という意味
+        # TCP/IP の場合は、SOCK_STREAM を使う
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            # IPアドレスとポートを指定
+            s.bind(('127.0.0.1', 50007))
+            # 1 接続
+            s.listen(1)
+            # connection するまで待つ
+            self.conn, self.addr = s.accept()
+
     def main(self):
+        self.socketConnect()
+
         while(self.isNeedContinueQ()):
             q = self.decideQ()
             self.showQ(q)
@@ -178,6 +198,8 @@ class HTICakinator:
 
         print(" result p :  "+str(self.p))
         result = self.showAndAskAnswer()
+        # クライアントに終了通知
+        self.conn.sendall(b'END')
         #if result == True:
         #    self.updateDatabase()
 
