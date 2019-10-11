@@ -1,5 +1,6 @@
 
-#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# #!/usr/bin/env python3
 import math
 import json
 import collections as cl
@@ -11,6 +12,9 @@ import socket
 THRESHOLD_ANS = 0.95 # 確率しきい値
 MAX_QUESTIONS = 10 # 最大質問数
 NUM_CHOICE = 1 # ランダム上位質問候補数
+
+SERVER_IP = '127.0.0.1' # サーバーIPアドレス
+SERVER_PORT = 50007 # サーバー接続ポート
 
 class HTICakinator:
     def __init__(self, database_path):
@@ -178,11 +182,13 @@ class HTICakinator:
         # TCP/IP の場合は、SOCK_STREAM を使う
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             # IPアドレスとポートを指定
-            s.bind(('127.0.0.1', 50007))
+            s.bind((SERVER_IP, SERVER_PORT))
             # 1 接続
             s.listen(1)
             # connection するまで待つ
+            print("Waiting for connection...")
             self.conn, self.addr = s.accept()
+            print("Connected:" + str(self.addr))
 
     def main(self):
         self.socketConnect()
