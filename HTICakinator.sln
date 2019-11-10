@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "HTICakinator", "HTICakinator\HTICakinator.pyproj", "{18E85DB3-009E-4D39-8335-E8673F97BD21}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB6DAC33-DB7A-4A0C-8C36-0731D25AC15E}"
+	ProjectSection(SolutionItems) = preProject
+		HTICakinator\templates\layout.html = HTICakinator\templates\layout.html
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

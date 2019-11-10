@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Index
+{% endblock %}
+
+{% block headline %}
+{{title}}
+{% endblock %}
+
+{% block content %}
+<div class="mb-3" id="msg">
+{{ question }}
+</div>
+
+<!-- Vue.js container -->
+
+<div id="app" class="m-3">
+  <palcomp />
+</div>
+
+
+
+<!-- palcomp's template-->
+
+{% raw %}
+    <script type="text/x-template" id="palcomp-template">
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="form-group">
+                <div class="row">
+                    {{ question }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </script>
+{% endraw %}
+
+<!-- Vue.js script -->
+<script>
+// mycomp object
+Vue.component('palcomp', {
+    template: '#palcomp-template',
+});
+
+
+// start Vue.
+new Vue({
+    el:'#app',
+    data: {
+        vue_msg: "動悸チェッカー"
+    }
+});
+
+</script>
+{% endblock %}
+
+
+{% block footer %}
+copyright 2019 YUKAQA
+{% endblock %}

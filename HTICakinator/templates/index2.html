@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Index
+{% endblock %}
+
+{% block headline %}
+{{title}}
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>{{ message }}</h1>
+        <h2>{{ question }}</h2>
+        <form class="" action="/answer/yes" method="get">
+            <input type="submit" name="" value="YES" onClick="">
+        </form>
+        <form class="" action="/answer/no" method="get">
+            <input type="submit" name="" value="NO" onClick="">
+        </form>
+        <form class="" action="/reset" method="get">
+            <input type="submit" name="" value="RESET" onClick="">
+        </form>
+    </div>
+
+<script>
+
+</script>
+{% endblock %}
