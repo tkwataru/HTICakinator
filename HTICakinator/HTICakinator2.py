@@ -148,3 +148,6 @@ class HTICakinator:
                 maxEstimateDisease = disease
 
         return (maxEstimateDisease, maxEstimate)
+    
+    def estimate(self):
+        return dict(self._p)

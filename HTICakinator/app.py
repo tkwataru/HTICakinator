@@ -19,24 +19,27 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.secret_key = 'change me!!'
 
 _akinator_from_user = {}
-_AKINATOR_LIFESPAN = timedelta(hours=1)
+_AKINATOR_TIMEOUT = timedelta(hours=1)
 
 
 def delete_not_used_akinators():
     for user, akinator in list(_akinator_from_user.items()):
-        if akinator.created_at + _AKINATOR_LIFESPAN < datetime.now():
+        if akinator.timeout < datetime.now():
             del _akinator_from_user[user]
 
 
 def require_akinator(create=False):
+    delete_not_used_akinators()
+    
     user = session['user'] = session.get('user', uuid4())
     if create and user not in _akinator_from_user:
         _akinator_from_user[user] = HTICakinator('database_dummy1011.json')
-        _akinator_from_user[user].created_at = datetime.now()
-        
-    delete_not_used_akinators()
     
-    return _akinator_from_user.get(user)
+    akinator = _akinator_from_user.get(user)
+    if akinator is not None:
+        akinator.timeout = datetime.now() + _AKINATOR_TIMEOUT
+        
+    return akinator
 
 
 def delete_akinator():
@@ -58,7 +61,8 @@ def question():
         return render_template('index2.html',
                                title='動悸チェッカーサンプル',
                                message='あなたの動悸症状に関する質問に答えてください',
-                               question=akinator.question())
+                               question=akinator.question(),
+                               confidence=', '.join('{}: {:.2%}'.format(disease, conf) for disease, conf in akinator.estimate().items()))
 
 
 @app.route('/answer/<yes_or_no>', methods=['GET'])
