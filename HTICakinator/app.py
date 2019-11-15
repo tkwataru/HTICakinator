@@ -14,6 +14,8 @@ import threading
 
 from HTICakinator2 import HTICakinator
 
+Q_DATABASE = 'database_dummy1011.json'
+
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.secret_key = 'change me!!'
@@ -28,12 +30,12 @@ def delete_not_used_akinators():
             del _akinator_from_user[user]
 
 
-def require_akinator(create=False):
+def require_akinator(create=False, database=''):
     delete_not_used_akinators()
     
     user = session['user'] = session.get('user', uuid4())
     if create and user not in _akinator_from_user:
-        _akinator_from_user[user] = HTICakinator('database_dummy1011.json')
+        _akinator_from_user[user] = HTICakinator(database)
     
     akinator = _akinator_from_user.get(user)
     if akinator is not None:
@@ -49,7 +51,9 @@ def delete_akinator():
 
 @app.route('/', methods=['GET'])
 def question():
-    akinator = require_akinator(create=True)
+    ### 質問データベース選択のための初期必須質問はここに書く ###
+
+    akinator = require_akinator(create=True, database=Q_DATABASE)
     
     if akinator.finished():
         (disease, est) = akinator.getBestEstimate()
@@ -80,11 +84,5 @@ def reset():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description='HTIC akinator client dummy UI')
-    parser.add_argument('--ip', default='127.0.0.1', help='Server IP address')
-    parser.add_argument('--port', default=50007, type=int, help='Server connection port')
-    args = parser.parse_args()
-
-    app.debug = True
-    app.run(host='localhost')
+    app.run(debug=True, host='localhost')
+    # app.run(debug=False, host='0.0.0.0') # public IP

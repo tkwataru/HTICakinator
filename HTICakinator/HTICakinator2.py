@@ -32,6 +32,7 @@ class HTICakinator:
         self._a_list = []
         self._threshold_ans = THRESHOLD_ANS
         self._max_questions = MAX_QUESTIONS
+        self._num_choice = NUM_CHOICE
 
         #init diseases
         self._diseases = self._database.keys()
@@ -98,7 +99,7 @@ class HTICakinator:
             e = self._calculateGainE(cur_entropy, q_candidate)
             e_q_list.append((e, q_candidate))
 
-        max_nth_e_q = np.array(heapq.nlargest(NUM_CHOICE, e_q_list))	# エントロピー上位n個の質問抽出
+        max_nth_e_q = np.array(heapq.nlargest(self._num_choice, e_q_list))	# エントロピー上位n個の質問抽出
         print(max_nth_e_q)
         nth_p = max_nth_e_q[:,0].astype(np.float32) / np.sum(max_nth_e_q[:,0].astype(np.float32))
         return np.random.choice(max_nth_e_q[:,1], p = nth_p)	# エントロピーを選択確率として質問をランダム選択
@@ -112,7 +113,7 @@ class HTICakinator:
 
         for disease in self._diseases:
             # p(c | qs, as, q, a) = p(a | c, q) | p(c | qs, as)
-            new_p[disease] = 1.0 / base_p *(self._database[disease][q][a]*1.0/(self._database[disease][q][0] + self._database[disease][q][1])) * p[disease]
+            new_p[disease] = 1.0 / base_p * (self._database[disease][q][a]*1.0/(self._database[disease][q][0] + self._database[disease][q][1])) * p[disease]
 
         return new_p
         
