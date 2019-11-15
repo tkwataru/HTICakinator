@@ -69,11 +69,11 @@ def question():
                                confidence=', '.join('{}: {:.0%}'.format(disease, conf) for disease, conf in akinator.estimate().items()))
 
 
-@app.route('/answer/<yes_or_no>', methods=['GET'])
-def answer(yes_or_no):
+@app.route('/answer/<yes_or_no_or_unknown>', methods=['GET'])
+def answer(yes_or_no_or_unknown):
     akinator = require_akinator(create=False)
     if akinator is not None and not akinator.finished():
-        akinator.answer(yes_or_no)
+        akinator.answer(yes_or_no_or_unknown)
     return redirect('/')
     
 

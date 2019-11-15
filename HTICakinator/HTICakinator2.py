@@ -126,8 +126,10 @@ class HTICakinator:
     def answer(self, a):
         assert not self.finished(), 'already finished'
         
-        a = {'yes': 0, 'no': 1}[a]
-        self._p = self._newP(self._p, self._q_list[-1], a)
+        a = {'yes': 0, 'no': 1, 'unknown':2}[a]
+        # unknownのときは質問を飛ばす
+        if a == 0 or a == 1:
+            self._p = self._newP(self._p, self._q_list[-1], a)
         self._a_list.append(a)
         self._q_list.append(self._decideQ())
     
