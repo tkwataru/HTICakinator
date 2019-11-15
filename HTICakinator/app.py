@@ -56,13 +56,13 @@ def question():
         return render_template('index2.html',
                                title='動悸チェッカーサンプル',
                                message='チェックが完了しました',
-                               question='{}: {:.2%}'.format(disease, est))
+                               question='{}: {:.0%}'.format(disease, est))
     else:
         return render_template('index2.html',
                                title='動悸チェッカーサンプル',
                                message='あなたの動悸症状に関する質問に答えてください',
                                question=akinator.question(),
-                               confidence=', '.join('{}: {:.2%}'.format(disease, conf) for disease, conf in akinator.estimate().items()))
+                               confidence=', '.join('{}: {:.0%}'.format(disease, conf) for disease, conf in akinator.estimate().items()))
 
 
 @app.route('/answer/<yes_or_no>', methods=['GET'])
